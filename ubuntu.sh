@@ -131,7 +131,7 @@ ripgrep() {
 exa() {
   if ls "$TMP_PATH/binaries/exa-x86_64-libc*" > /dev/null 2>&1; then
     echo "Installing exa "
-    cp "$TMP_PATH/binaries/exa-x86_64-libc*" $LOCAL/bin/rg
+    cp "$TMP_PATH/binaries/exa-x86_64-libc*" $LOCAL/bin/exa
   else
     echo "exa binary not found"
   fi
@@ -140,7 +140,7 @@ exa() {
 autojump() {
   if ls "$TMP_PATH/binaries/autojump-x86_64-libc*" > /dev/null 2>&1; then
     echo "Installing autojump"
-    cp "$TMP_PATH/binaries/autojump-x86_64-libc*" $LOCAL/bin/rg
+    cp "$TMP_PATH/binaries/autojump-x86_64-libc*" $LOCAL/bin/autojump
   else
     echo "autojump binary not found"
     return
@@ -156,7 +156,7 @@ autojump() {
 fd() {
   if ls "$TMP_PATH/binaries/fd-x86_64-libc*" > /dev/null 2>&1; then
     echo "Installing fd"
-    cp "$TMP_PATH/binaries/fd-x86_64-libc*" $LOCAL/bin/rg
+    cp "$TMP_PATH/binaries/fd-x86_64-libc*" $LOCAL/bin/fd
     echo "FZF_DEFAULT_COMMAND=\"fd --type file --color=always\"" >> $RC_FILE
     echo "FZF_CTRL_T_COMMAND=\"$FZF_DEFAULT_COMMAND\"" >> $RC_FILE
     echo "FZF_DEFAULT_OPTS=\"--ansi\"" >> $RC_FILE
