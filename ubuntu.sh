@@ -158,9 +158,9 @@ fd() {
   if ls "$TMP_PATH/binaries/" | egrep "fd-x86_64" > /dev/null 2>&1; then
     echo "Installing fd"
     cp "$TMP_PATH/binaries/fd-x86_64"* $LOCAL/bin/fd
-    echo "FZF_DEFAULT_COMMAND=\"fd --type file --color=always\"" >> $RC_FILE
-    echo "FZF_CTRL_T_COMMAND=\"$FZF_DEFAULT_COMMAND\"" >> $RC_FILE
-    echo "FZF_DEFAULT_OPTS=\"--ansi\"" >> $RC_FILE
+    echo "export FZF_DEFAULT_COMMAND=\"fd --type file --color=always\"" >> $RC_FILE
+    echo "export FZF_CTRL_T_COMMAND=\"$FZF_DEFAULT_COMMAND\"" >> $RC_FILE
+    echo "export FZF_DEFAULT_OPTS=\"--ansi\"" >> $RC_FILE
     echo "" >> $RC_FILE
   else
     echo "fd binary not found"
