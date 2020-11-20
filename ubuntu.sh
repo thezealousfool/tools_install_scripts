@@ -43,17 +43,17 @@ tmux() {
   if [ ! $NO_ROOT ]; then
     echo "Installing tmux"
     apt-get install -y --no-install-recommends tmux > /dev/null
+    curl -s -fLo $HOME/.tmux.conf "https://vivekroy.com/tmux.conf"
   fi
 }
 
 zsh() {
   if [ ! $NO_ROOT ]; then
     echo "Installing zsh"
-    apt-get install -y --no-install-recommends tmux > /dev/null
+    apt-get install -y --no-install-recommends zsh > /dev/null
     curl -s -fsSL "https://starship.rs/install.sh" | zsh -s -- -y
     echo "$(starship init zsh)" >> $HOME/.zshrc
     curl -s -fLo $HOME/.config/starship.toml --create-dirs "https://vivekroy.com/starship.toml"
-    curl -s -fLo $HOME/.tmux.conf "https://vivekroy.com/tmux.conf"
   fi
 }
 
@@ -120,27 +120,27 @@ binaries() {
 }
 
 ripgrep() {
-  if ls "$TMP_PATH/binaries/rg-x86_64-libc*" > /dev/null 2>&1; then
+  if ls "$TMP_PATH/binaries/" | egrep "rg-x86_64" > /dev/null 2>&1; then
     echo "Installing ripgrep"
-    cp "$TMP_PATH/binaries/rg-x86_64-libc*" $LOCAL/bin/rg
+    cp "$TMP_PATH/binaries/rg-x86_64"* $LOCAL/bin/rg
   else
     echo "Ripgrep binary not found"
   fi
 }
 
 exa() {
-  if ls "$TMP_PATH/binaries/exa-x86_64-libc*" > /dev/null 2>&1; then
+  if ls "$TMP_PATH/binaries/" | egrep "exa-x86_64" > /dev/null 2>&1; then
     echo "Installing exa "
-    cp "$TMP_PATH/binaries/exa-x86_64-libc*" $LOCAL/bin/exa
+    cp "$TMP_PATH/binaries/exa-x86_64"* $LOCAL/bin/exa
   else
     echo "exa binary not found"
   fi
 }
 
 autojump() {
-  if ls "$TMP_PATH/binaries/autojump-x86_64-libc*" > /dev/null 2>&1; then
+  if ls "$TMP_PATH/binaries/" | egrep "autojump-x86_64" > /dev/null 2>&1; then
     echo "Installing autojump"
-    cp "$TMP_PATH/binaries/autojump-x86_64-libc*" $LOCAL/bin/autojump
+    cp "$TMP_PATH/binaries/autojump-x86_64"* $LOCAL/bin/autojump
   else
     echo "autojump binary not found"
     return
@@ -148,24 +148,39 @@ autojump() {
   if [ -f "$TMP_PATH/binaries/autojump.bash" ]; then
     echo "Installing autojump script"
     cat "$TMP_PATH/binaries/autojump.bash" >> $RC_FILE
+    echo "" >> $RC_FILE
   else
     echo "autojump script file not found"
   fi
 }
 
 fd() {
-  if ls "$TMP_PATH/binaries/fd-x86_64-libc*" > /dev/null 2>&1; then
+  if ls "$TMP_PATH/binaries/" | egrep "fd-x86_64" > /dev/null 2>&1; then
     echo "Installing fd"
-    cp "$TMP_PATH/binaries/fd-x86_64-libc*" $LOCAL/bin/fd
+    cp "$TMP_PATH/binaries/fd-x86_64"* $LOCAL/bin/fd
     echo "FZF_DEFAULT_COMMAND=\"fd --type file --color=always\"" >> $RC_FILE
     echo "FZF_CTRL_T_COMMAND=\"$FZF_DEFAULT_COMMAND\"" >> $RC_FILE
     echo "FZF_DEFAULT_OPTS=\"--ansi\"" >> $RC_FILE
-    export FZF_DEFAULT_COMMAND="fd --type file --color=always"
-    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-    export FZF_DEFAULT_OPTS="--ansi"
+    echo "" >> $RC_FILE
   else
     echo "fd binary not found"
   fi
+}
+
+alias() {
+  echo "alias cl=clear" >> $RC_FILE
+  echo "alias rt=reset" >> $RC_FILE
+  echo "alias ls=exa" >> $RC_FILE
+  echo "alias l=exa" >> $RC_FILE
+  echo 'alias ll="exa -l"' >> $RC_FILE
+  echo 'alias la="exa -al"' >> $RC_FILE
+  echo 'alias lgit="lazygit"' >> $RC_FILE
+  echo "export EDITOR=nvim" >> $RC_FILE
+
+  echo "function cd {" >> $RC_FILE
+  echo '    builtin cd "$@" && ls -F' >> $RC_FILE
+  echo "  }" >> $RC_FILE
+  echo "}" >> $RC_FILE
 }
 
 install_all() {
@@ -183,6 +198,7 @@ install_all() {
   exa
   autojump
   fd
+  alias
 }
 
 while test $# -gt 0; do
@@ -204,4 +220,5 @@ done
 
 PWD=$(pwd)
 install_all
+source $RC_FILE
 cd $PWD
